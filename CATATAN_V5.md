@@ -42,3 +42,5 @@ Wadah depan tetap 20 (sudah lolos uji).
 - (Sudah selesai) Lubang baut dinding dan blok sudut: 25/25 bertemu pasangannya, dinding memakai sambungan tab/puzzle. Lihat DAFTAR_FILE.md.
 - Dudukan ESP32-C3 belum ada.
 - Batas servo 1: maksimum 158°.
+
+- 09_braket_servo1 disesuaikan dengan ukuran servo MG90S hasil ukur (jendela 23,0 x 12,0 mm). Servo 2 dan 3 menunggu desain ulang kereta.

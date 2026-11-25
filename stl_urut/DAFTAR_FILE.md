@@ -36,3 +36,9 @@ Aturan nama: **nomor kelompok - huruf urutan _ nama part**. Semua file sudah dia
 
 ## Batas firmware servo 1
 Maksimum 158 derajat (di atas ±160 ujung bawah wadah menabrak blok sudut kanan bawah). Baris 1 ≈ 21°, +21,53° per baris, baris 7 ≈ 150°.
+
+## Data servo MG90S (hasil ukur jangka sorong)
+- Badan 22,5 x 11,5 mm, tinggi dasar sampai atas badan 24 mm, tinggi total sampai ujung gerigi 28 mm
+- Kuping: tebal 2 mm, total 32 mm, lubang bulat Ø3 mm, dasar badan sampai atas kuping 19,5 mm
+- Lingkaran hitam di atas badan Ø11 mm (menempel di ujung badan), gerigi logam Ø4,5 mm, pusat poros 5,5 mm dari ujung badan
+- 09_braket_servo1 sudah disesuaikan: jendela badan 23,0 x 12,0 mm, poros tepat pada pusat G1. Jarak antar lubang kuping masih perkiraan 27,8 mm
