@@ -1,140 +1,108 @@
-# Panduan Cetak 3D: ARTA-C Portable v2
+# Panduan Cetak 3D: ARTA-C Portable v2 (v5)
 
-Panduan untuk mencetak 34 file STL di folder [`stl/`](stl/), disiapkan untuk **Bambu Lab A1 mini (bed 180 × 180 × 180 mm)**. Semua file sudah **diputar ke posisi cetak terbaik**: tinggal impor ke slicer, jangan diputar lagi.
+Untuk file di folder `stl_urut/`, disiapkan untuk **Bambu Lab A1 mini (bed 180 × 180 × 180 mm)**. Semua file sudah dalam posisi cetak. Jangan diputar, kecuali yang disebut di bawah.
 
 ## Ringkasan
 
 | | |
 |---|---|
-| Jumlah file | 34 STL: 5 part panjang **dibelah dua** (akhiran `_A_bawah` / `_B_atas`) supaya muat bed 180 mm |
-| Filamen | ±595 g, jadi **1 rol 1 kg cukup** (sisanya untuk wadah cadangan atau cetak ulang) |
-| Waktu cetak | ±22–26 jam di Bambu Lab A1 mini (profil standar 0,20 mm) |
-| Printer | **Bambu Lab A1 mini** (180 × 180 mm). Semua part muat; `14_pemandu_kanan` (194 mm) diletakkan **diagonal 45°** |
-| Nozzle | 0,4 mm |
+| Jumlah file | 33 STL. Semuanya sudah diaudit: satu bagian utuh, 0 non-manifold, tanpa permukaan dobel |
+| Nozzle / layer | 0,4 mm / 0,2 mm (roda gigi: 0,12–0,16 mm) |
+| Dinding besar | Dicetak dalam dua bagian (bawah dan atas) agar muat bed, lalu disambung |
 
-> **Part yang dibelah** (sambungan ekor burung/dovetail, dilem setelah dicetak, lihat bagian 6):
-> dinding depan, dinding belakang (dibelah di atas layar), dinding kiri, dinding kanan, dan wadah belakang
-> (dibelah di sela baris 3–4). Wadah depan dipendekkan menjadi 176 mm supaya muat utuh.
+## Jangan dicetak dulu
+
+Part berikut belum didesain ulang untuk v5: `03_rel_kereta`, `05_pelatuk`, `06_engkol_servo3`, `07_tuas_servo2`, `08_braket_servo2`, `16_corong_baki`. File `04_kereta` memang belum ada. Part ini tetap ada di folder hanya sebagai arsip.
 
 ## 1. Bahan
 
-| Bahan | Untuk part | Alasan |
-|---|---|---|
-| **PLA** | dinding, blok sudut, rel, pemandu, landasan, corong, braket, klem layar, wadah | Mudah dicetak dan cukup kaku |
-| **PETG** (disarankan) | roda gigi G1 & G2, pelatuk, engkol servo 3, tuas servo 2, kereta | Bagian bergerak dan menahan beban: lebih ulet, tidak getas, gesekannya lebih halus |
+| Bahan | Part |
+|---|---|
+| **PETG** (disarankan) | `10` G1, `11` G2 |
+| PLA | semua part lain. `21_kantong_jari` pakai **PLA hitam** (kedap cahaya untuk sensor PPG) |
 
-Kalau hanya punya PLA, semua part tetap bisa dicetak dengan PLA. Gigi roda gigi dan pelatuk saja yang lebih cepat aus.
+Bila hanya ada PLA, roda gigi tetap bisa dicetak PLA, tetapi giginya lebih cepat aus.
 
 ## 2. Setelan slicer (Bambu Studio, profil A1 mini)
 
-| Setelan | Nilai | Catatan |
+| Setelan | Nilai |
+|---|---|
+| Layer | 0,2 mm. Roda gigi (`10`, `11`) dan **rack di `19`**: 0,12–0,16 mm |
+| Perimeter | 3 (lubang sekrup kuat). Top/bottom 4/4 |
+| Infill | 20 % gyroid. Roda gigi 40–50 % |
+| Suhu | PLA 200–210 °C / bed 60 °C. PETG 230–245 °C / bed 75–80 °C |
+| Elephant foot compensation | **0,15 mm** (wajib untuk roda gigi dan wadah) |
+| XY hole compensation | 0,1 mm bila ada |
+| Support | Tidak perlu untuk part yang sudah diaudit (pasang hanya bila slicer menandai overhang pada `15`) |
+| Brim | 5 mm untuk `12_spacer_G2` dan pemandu yang tinggi/ramping |
+
+Part yang diputar: `14_pemandu_kanan` (180 mm) **diletakkan diagonal** di bed.
+
+## 3. Cetak uji dulu (kecil, ±20 menit)
+
+1. **`12_spacer_G2`**: baut M3 harus lewat tanpa dipaksa.
+2. **`26-A` dan `26-B` (pasak wadah)**: cetak dua-duanya, lalu pilih yang pas.
+   - `26-A` Ø1,9 mm × 8 pcs, `26-B` Ø2,0 mm × 8 pcs. Pasak menggantikan baut M2 yang menyatukan wadah depan dan belakang.
+   - Pasak harus masuk dengan tekanan jari dan tidak lepas sendiri. Pakai set yang pas, set satunya cadangan.
+
+Cocokkan juga `20_wadah_depan` dengan blister asli (103,5 × 179 mm) sebelum mencetak part besar.
+
+## 4. Urutan cetak
+
+| Tahap | File | Bahan |
 |---|---|---|
-| Layer height | **0,2 mm** | Roda gigi (10, 11) dan pelatuk (05): **0,12–0,16 mm** supaya gigi halus |
-| Dinding / perimeter | **3** (≈1,2 mm) | Penting supaya lubang sekrup kuat |
-| Top / bottom layer | 4 / 4 | |
-| Infill | **20 % gyroid** | Roda gigi, engkol, pelatuk: **40–50 %** |
-| Suhu PLA | nozzle 200–210 °C, bed 60 °C | |
-| Suhu PETG | nozzle 230–245 °C, bed 75–80 °C, fan 30–50 % | |
-| Kecepatan | Profil standar Bambu Studio | Untuk roda gigi dan pelatuk pilih mode *Silent* / kecepatan 50 % supaya lebih presisi |
-| Elephant foot compensation | **0,15 mm** | Wajib untuk roda gigi supaya gigi bawah tidak melebar |
-| XY hole compensation | 0,1 mm (kalau tersedia) | Membantu lubang M3 dan lubang spline servo |
-| Support | **Hanya untuk 04_kereta dan 15_landasan**: "touching build plate / tree support" | Part lain tanpa support |
-| Brim | 5 mm untuk part tinggi dan ramping: 12_spacer_G2, 16_corong_baki, 13/14 pemandu | Mencegah terlepas atau goyang |
-| Bed | Textured PEI (bawaan A1 mini), suhu sesuai filamen | Bersihkan dengan sabun cuci piring sebelum cetak dinding |
+| 1. Mekanisme wadah | 10 G1, 11 G2, 12 spacer, 09 braket servo 1 | PETG (gear), PLA |
+| 2. Wadah | 19 wadah belakang (rack), 20 wadah depan, 26-A + 26-B pasak | PLA |
+| 3. Jalur | 13 pemandu kiri, 14 pemandu kanan (diagonal), 15 landasan | PLA |
+| 4. Blok sudut | 02-A, 02-B, 02-C, 02-D | PLA |
+| 5. Dinding | 01-A atas, 01-B bawah, 01-C/D belakang, 01-E/F depan, 01-G/H kanan, 01-I/J kiri | PLA |
+| 6. Layar dan sensor | 17 klem layar (4 pcs), 21 kantong jari PPG | PLA, PLA hitam |
 
-## 3. Cetak uji dulu (±20 menit)
+Mulai dari tahap 1–3 agar gerak wadah, rack, dan kecocokan blister bisa diuji lebih dulu. Dinding dicetak belakangan. Waktu dan berat filamen lihat hasil slicing di Bambu Studio (angka lama di dokumen ini sudah dihapus karena tidak sesuai v5).
 
-Sebelum mencetak part besar, cetak dua part kecil ini untuk mengecek toleransi printer:
+## 5. Perhatian khusus per part
 
-1. **06_engkol_servo3** (0,3 g). Tekan ke spline MG90S.
-   - Harus masuk dengan tekanan jari dan tidak goyang.
-   - Terlalu sesak: naikkan XY hole compensation 0,05 mm.
-   - Terlalu longgar: turunkan, atau tempelkan horn bawaan servo dengan lem.
-2. **12_spacer_G2** (0,6 g). Masukkan baut M3, harus lewat tanpa dipaksa.
-   Lubang ulir di part lain (Ø2,6 mm) juga harus bisa dimasuki sekrup M3 dengan diputar.
-
-Kalau keduanya pas, setelan sudah siap untuk semua part.
-
-## 4. Urutan cetak per plate (Bambu Lab A1 mini, 180 × 180 mm)
-
-| Plate | Isi | Bahan | ± Waktu* | ± Berat |
-|---|---|---|---|---|
-| 1 | 10_gear_G1 + 11_gear_G2 + 05_pelatuk + 06_engkol + 07_tuas + 12_spacer + 04_kereta (support) | **PETG** | 2 jam | 26 g |
-| 2 | 19_wadah_belakang_B_atas | PLA | 1,5 jam | 30 g |
-| 3 | 19_wadah_belakang_A_bawah + 17/18 klem_layar | PLA | 1,5 jam | 27 g |
-| 4 | 20_wadah_depan | PLA | 1,5 jam | 40 g |
-| 5 | 01_dinding_belakang_A_bawah | PLA | 2,5 jam | 70 g |
-| 6 | 01_dinding_belakang_B_atas + 01_dinding_bawah | PLA | 2,5 jam | 78 g |
-| 7 | 01_dinding_depan_A_bawah (dudukan layar, kantong baterai, sensor) | PLA | 3 jam | 78 g |
-| 8 | 01_dinding_depan_B_atas + 01_dinding_atas | PLA | 2,5 jam | 75 g |
-| 9 | 01_dinding_kiri_A + 01_dinding_kiri_B + 01_dinding_kanan_B | PLA | 2 jam | 50 g |
-| 10 | 01_dinding_kanan_A + 03_rel_kereta + 13_pemandu_kiri + 15_landasan (support) | PLA | 2,5 jam | 52 g |
-| 11 | 14_pemandu_kanan (**diagonal 45°**) + 16_corong_baki + 02_blok_sudut ×4 + 08/09 braket servo | PLA | 2 jam | 45 g |
-| 12 | 21_kantong_jari_ppg | **PLA hitam** | 0,7 jam | 15 g |
-
-\*Perkiraan untuk profil standar A1 mini. Angka pasti lihat di Bambu Studio setelah slicing.
-
-Mulai dari **plate 1–4** (mekanisme dan wadah) supaya fungsi mekanisme dan kecocokan blister bisa diuji lebih dulu.
-Dinding dicetak belakangan.
-
-## 5. Detail tiap part
-
-| File | Jml | Support | Perhatian khusus |
-|---|---|---|---|
-| 01_dinding_depan_A/B | 1+1 | – | **Dibelah** di atas layar (7 dovetail). Muka luar menempel di bed (permukaan halus). Di sisi atas ada kantong layar, LiPo, IP5306, ESP32-CAM, cincin buzzer, dan DHT11. Bersihkan lubang lensa kamera Ø9, lubang buzzer, lubang kabel sensor jari 8×4,5 mm, 4 lubang baut kantong jari, dan kisi DHT11. |
-| 01_dinding_belakang_A/B | 1+1 | – | **Dibelah** (7 dovetail). Banyak lubang sekrup (countersink di muka luar). Pakai bed bersih; ruangan tanpa angin mencegah warping. |
-| 01_dinding_atas | 1 | – | Ada celah tempat wadah masuk. Cek ukurannya pas dengan wadah. |
-| 01_dinding_kiri_A/B | 1+1 | – | **Dibelah** di atas port USB-C (2 dovetail). Ada lubang **port USB-C** (10 × 4,6 mm) untuk mengecas dan lubang saklar Ø6,2 mm. Cocokkan dengan modul IP5306 sebelum dicetak. |
-| 01_dinding_bawah | 1 | – | – |
-| 01_dinding_kanan_A/B | 1+1 | – | **Dibelah** (2 dovetail) |
-| 02_blok_sudut_BL/BR/TL/TR | 4 | – | Kecil; BL dan BR lebih panjang (tebal penuh) |
-| 03_rel_kereta | 1 | – | Panjang 161 mm. Pastikan lurus (tidak warping). |
-| 04_kereta | 1 | **ya** | Support hanya di bawah kait rel dan atap jalur yoke. Bersihkan alur yoke sampai pelatuk bisa maju-mundur dengan lancar. |
-| 05_pelatuk | 1 | – | Layer 0,12–0,16 mm. Bantalan depannya yang menekan kubah blister. |
-| 06_engkol_servo3 | 1 | – | Masuk ke spline MG90S (lihat cetak uji) |
-| 07_tuas_servo2 | 1 | – | Panjang 122 mm, rebah. PETG supaya lentur dan tidak patah. |
-| 08_braket_servo2, 09_braket_servo1 | 1+1 | – | – |
-| 10_gear_G1_40T, 11_gear_G2_36T-12T | 1+1 | – | Layer 0,12–0,16, elephant foot 0,15, infill 40 %. Cek gigi tidak menempel (bersihkan dengan cutter). |
-| 12_spacer_G2 | 1 | – | Pakai brim (tinggi dan ramping) |
-| 13_pemandu_kiri, 14_pemandu_kanan | 1+1 | – | 14 sepanjang 194 mm: **putar 45° di bed**. Jalur naik-turun wadah. Permukaan dalam harus halus; ampelas kalau seret. |
-| 15_landasan | 1 | **ya** | Support di bawah batang atas. Empat celah miring 45° (tempat kaplet keluar) harus bersih dari sisa support. |
-| 16_corong_baki | 1 | – | Tinggi 47 mm. Pakai brim. Permukaan luncur sebaiknya halus supaya kaplet tidak tersangkut. |
-| 17/18_klem_layar | 1+1 | – | – |
-| 19_wadah_belakang_A/B | 1+1 | – | **Dibelah** di sela baris 3–4 (2 dovetail mini). Rack ada di sisi kiri; setelah dilem, gigi rack harus lurus tanpa undakan. |
-| 20_wadah_depan | 1 | – | Utuh, 117 × 176 mm. Jendela kubah 23,5 × 13,5 mm, **miring 45°**. Cocokkan dengan blister asli sebelum mencetak banyak. |
-| 21_kantong_jari_ppg | 1 | – | Cetak **PLA hitam** (kedap cahaya, penting untuk sinyal PPG). Lubang jari harus halus; jendela sensor 6×8 mm bersih. Papan MAX30102 dimasukkan dari bawah lalu dikunci lem tembak, sensor menghadap ke atas. |
+| File | Catatan |
+|---|---|
+| 01-A dinding atas | Celah wadah 119,75 × 10,5 mm dengan bibir miring 0,8 mm. Cek wadah masuk tanpa sesak |
+| 01-C/D belakang | Banyak lubang baut, termasuk lubang G2 dan braket servo 1. Bed bersih, tanpa angin |
+| 01-E depan bawah | Memuat jendela layar 69,4 × 50,4 mm, kantong DHT22, kantong LiPo 2 × 803040, dan celah kabel baterai. Bersihkan semua kantong dari sisa filamen |
+| 01-F depan atas | Dudukan ESP32-CAM |
+| 01-G kanan bawah | Lubang USB-C tegak 4,6 × 10 mm |
+| 01-H kanan atas | Lubang saklar geser 7,5 × 3,9 mm dengan bingkai 12,9 × 6,9 mm |
+| 01-I/J kiri | Polos, tanpa lubang |
+| 02-A…D blok sudut | **Arah pasang berbeda.** 02-A dan 02-B: lubang tegak menghadap BAWAH. Lihat `DAFTAR_FILE.md` |
+| 10 G1 44T | Lubang spline Ø4,7 mm untuk servo |
+| 11 G2 36T + 12T | Tebal total 14,6 mm. Gigi 12T diperpanjang 10 mm |
+| 13/14 pemandu | Permukaan dalam harus halus. Ampelas bila seret. Celah kiri-kanan wadah hanya 0,25 mm per sisi |
+| 15 landasan | Jarak celah 25,0 mm. Empat celah miring "/" harus bersih |
+| 17 klem layar | 4 klem: 2 pendek di sisi USB layar, 2 panjang di seberangnya. Baut M3 × 6 |
+| 19 wadah belakang | Satu potong utuh 119,25 × 176 mm dengan rack. Rack ditipiskan 0,1 mm (backlash). Gigi harus bersih tanpa undakan |
+| 20 wadah depan | 28 jendela, kubah miring "/". Cek dengan blister asli |
+| 21 kantong jari PPG | PLA hitam. Jendela sensor harus bersih |
 
 ## 6. Setelah dicetak
 
-1. **Bersihkan** sisa support, stringing, dan bibir bawah (elephant foot), terutama di roda gigi, rack, dan alur.
-2. **Lem part yang dibelah** (dinding depan, belakang, kiri, kanan, wadah belakang):
-   - Coba pasangkan ekor burung tanpa lem dulu. Harus masuk dengan tekanan jari; kalau sesak, amplas sisi tonjolan.
-   - Letakkan kedua belahan di atas kaca atau permukaan rata dengan muka luar menghadap ke bawah, lalu lem dengan lem CA (lem korea/lem G) atau epoksi 5 menit. Tekan rata dan tunggu sampai kering.
-   - **Wadah belakang:** pastikan gigi rack di sisi kiri lurus tanpa undakan di sambungan. Amplas tipis bila ada. Wadah depan yang utuh nanti menjepit sambungan ini dengan baut M2 di kedua belahan.
-   - Sambungan dinding belakang juga diperkuat oleh part dalam yang dibaut melintasinya (landasan, pemandu).
-3. **Lubang M3**: putar sekrup M3 ke tiap lubang Ø2,6 mm sekali untuk "mengulir" plastik, lalu lepas lagi.
-4. **Uji fungsi sebelum dirakit**:
-   - Pelatuk harus meluncur maju-mundur di alur kereta tanpa macet.
-   - Wadah harus turun-naik di pemandu dengan halus. Kalau seret, gosok dengan ampelas 400 atau beri sedikit grafit/lilin.
-   - G2 dan rack wadah harus bisa diputar dengan tangan tanpa melompat gigi, termasuk saat melewati sambungan.
-   - Blister asli harus masuk ke wadah dan tiap kubah harus pas di jendelanya.
-5. Lanjutkan ke perakitan di **PANDUAN_RAKIT.pdf**.
+1. Bersihkan stringing, bibir bawah (elephant foot), terutama di roda gigi, rack, dan tab sambungan.
+2. **Coba pasang sambungan puzzle tanpa lem.** Kelonggaran desain 0,10–0,15 mm. Tab harus masuk dengan tekanan ringan. Bila sesak, amplas tipis tonjolannya.
+3. Dinding bagian bawah dan atas dari satu sisi disambung dengan lem CA atau epoksi, muka luar rata di atas kaca.
+4. Lubang M3: putar sekrup M3 sekali untuk mengulir plastik, lalu lepas.
+5. Uji fungsi: wadah masuk dan turun di pemandu tanpa seret, G2 dan rack berputar tanpa melompat gigi.
+6. Lanjut ke [PANDUAN_RAKIT.md](PANDUAN_RAKIT.md).
 
 ## 7. Masalah yang sering terjadi
 
-| Masalah | Penyebab | Solusi |
-|---|---|---|
-| Dinding besar melengkung (warping) | Bed kurang panas atau ada angin | Bed 60 °C (PLA), lem stik/PEI bersih, brim 5 mm, tutup printer |
-| Roda gigi macet atau berisik | Elephant foot atau gigi kasar | Kompensasi 0,15 mm, layer 0,12 mm, ampelas sisi gigi, beri sedikit grease silikon |
-| Lubang sekrup terlalu kecil | Printer over-extrusion | Kalibrasi flow (e-steps / flow rate), atau bor Ø2,5 mm |
-| Engkol atau G1 longgar di spline servo | Toleransi printer | Lem horn bawaan servo ke part, atau cetak ulang dengan kompensasi lebih kecil |
-| Kubah blister tidak pas di jendela wadah | Ukuran blister berbeda dari perkiraan | Ukur blister, ubah `BL_W, BL_H, CAP_L, CAP_W, TILT, GAP_X, GAP_Z` di `build.py`, lalu jalankan `python build.py` |
+| Masalah | Solusi |
+|---|---|
+| Dinding melengkung (warping) | Bed 60 °C, PEI bersih, brim 5 mm, tutup printer |
+| Roda gigi macet atau berisik | Kompensasi 0,15 mm, layer 0,12 mm, ampelas gigi, sedikit grease silikon |
+| Lubang sekrup terlalu kecil | Kalibrasi flow atau bor Ø2,5 mm |
+| G1 longgar di spline servo | Lem horn bawaan servo ke part |
+| Kubah blister tidak pas di jendela | Ukur blister lagi dan kabari agar wadah disesuaikan |
 
-## 8. Bahan non-cetak
+## 8. Bahan non-cetak (yang sudah pasti)
 
-Daftar lengkap (jumlah dihitung dari model) ada di **PANDUAN_RAKIT.pdf** bagian 1. Ringkasnya:
-
-- Sekrup **M3 × 10** kepala countersink ±37 (beli 45), **M3 × 12** + mur ×4, **M3 × 40** + mur nyloc + 2 ring ×1 (poros G2), **M2 × 8** ×6
-- **MG90S** ×3, **PCA9685** ×1, **ESP32-2432S028 (CYD)** ×1, **LiPo 103450** ×1, **IP5306 (USB-C)** ×1, kapasitor 1000 µF ×1
-- **ESP32-CAM** (OV2640) ×1 + adaptor USB-TTL untuk upload pertama, **MAX30102** ×1, **DHT11** ×1, **buzzer aktif 5 V Ø12 mm** ×1, transistor S8050/2N2222 + resistor 1 kΩ, saklar toggle mini Ø6 ×1
-- **Lem CA atau epoksi** untuk sambungan part yang dibelah; lem tembak (hot glue) untuk mengunci ESP32-CAM, MAX30102, DHT11, dan buzzer
+- Baut M3 × 10 countersink (dinding ke blok sudut, part dalam ke dinding belakang, tutup atas), M3 × 8 (pemandu kanan), M3 × 6 (klem layar), M3 × 45 + mur nyloc + ring (poros G2), M3 × 12 + mur (kantong jari PPG). Jumlah pasti ada di PANDUAN_RAKIT.
+- Pasak wadah dicetak (tidak perlu baut M2).
+- MG90S × 3, PCA9685, ESP32-2432S028, ESP32-CAM, ESP32-C3, DHT22 + resistor 10 kΩ, LiPo 803040 × 2, modul IP5306 (USB-C), saklar geser 3 kaki 12,5 × 6,5 × 6 mm, MAX30102, buzzer, kapasitor 1000 µF.
+- Lem CA atau epoksi untuk sambungan dinding; lem tembak untuk ESP32-CAM, DHT22, dan MAX30102.

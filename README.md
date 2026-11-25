@@ -1,120 +1,99 @@
 # ARTA-C Portable v2: dispenser obat TB konsep "pemanggang roti"
 
-🎬 **Animasi cara kerja (1080p):** [`animasi/ARTA-C_portable_animasi.mp4`](animasi/ARTA-C_portable_animasi.mp4) (27 detik)
-🛠️ **Video rancangan teknik (gambar urai berlabel):** [`animasi/ARTA-C_rancangan_teknik_exploded.mp4`](animasi/ARTA-C_rancangan_teknik_exploded.mp4)
-📐 **Gambar teknik A3 (27 lembar):** [`gambar_teknik/GT_ARTA-C_Portable_v2.pdf`](gambar_teknik/GT_ARTA-C_Portable_v2.pdf)
+Pembaruan terakhir: 26 Nov 2026 (mengikuti isi folder `stl_urut/` versi v5).
 
-![Wadah dimasukkan](render/03_wadah_dimasukkan_seperti_roti.png)
+Ukuran luar kotak **168 × 226 × 54 mm** (lebar × tinggi × tebal). Dicetak 3D di **Bambu Lab A1 mini** (bed 180 mm).
 
-Ukuran luar **168 × 226 × 54 mm** (lebar × tinggi × tebal). Perangkat berdiri tegak dan **seluruh bagiannya dicetak 3D**.
+## Status singkat
 
-## Konsep
+| Bagian | Status |
+|---|---|
+| Kotak (dinding, blok sudut, sambungan puzzle) | Selesai, sudah diaudit (1 bagian utuh, 0 non-manifold, 25/25 lubang baut bertemu pasangannya) |
+| Wadah + rack, roda gigi G1/G2, braket servo 1, pemandu, landasan, tutup atas | Selesai, diuji tabrakan di Blender dari 0° sampai 165° |
+| Layar CYD, DHT22, LiPo 2 × 803040, USB-C, saklar geser | Selesai |
+| Kereta pelatuk (04), servo 2, rel, pelatuk, engkol, corong baki | **Belum didesain ulang. Jangan dicetak dulu** (file 04 belum ada) |
+| Dudukan ESP32-C3 | Belum ada. Di dalam kotak belum ada tempat khusus |
+| Animasi (`animasi/`) | Masih memakai dinding versi lama, belum ada sambungan puzzle dan fitur terbaru |
+| `GAMBAR_TEKNIK_...pdf` dan gambar `rakit/langkah_*.png` | Masih versi lama (sebelum v5), jangan dijadikan acuan |
 
-1. **Blister obat tetap utuh di bungkusnya.** PMO menjepit blister di dalam **wadah** (`19_wadah_belakang` + `20_wadah_depan`).
-2. Wadah dimasukkan ke **celah di atas**. Mula-mula wadah menyembul seperti roti di pemanggang.
-3. **Servo 1** memutar roda gigi G1 → G2 yang menggigit rack di sisi wadah. Wadah turun **perlahan, satu baris per langkah** (jarak baris 21,85 mm).
-4. **Servo 2** mengayun tuas panjang di bawah, sehingga **kereta pelatuk bergerak kiri–kanan** ke kolom 1–4.
-5. **Servo 3** di kereta memutar engkol (mekanisme scotch-yoke). Pelatuk **mematuk perlahan** menekan kubah sampai kaplet tembus foil ke belakang.
-   Landasan di belakang wadah menahan tekanan itu dan menyisakan celah untuk kaplet keluar.
-6. Kaplet jatuh ke lantai miring di belakang, meluncur ke kanan, lalu turun ke **baki ambil** di kanan-bawah depan.
-7. **Layar CYD 2,8" (LVGL)** ada di muka depan.
-8. **Fitur pemantauan pasien** di muka depan:
-   - **ESP32-CAM** (kiri-atas, setinggi wajah) memverifikasi wajah pasien sebelum obat dikeluarkan, dan bisa memotret bukti minum obat untuk PMO.
-   - **Kantong jari PPG** (`21_kantong_jari_ppg`): terowongan jari tertutup seperti oksimeter, menonjol 42 mm di bawah layar. Sensor **MAX30102** ada di lantai terowongan dekat ujung jari, dan terowongannya menghalangi cahaya luar. Hasil ukurnya:
-     - **Detak jantung dan SpO₂**: terukur langsung oleh MAX30102.
-     - **Tekanan darah dan gula darah**: hanya **estimasi eksperimental** dari bentuk gelombang PPG (perlu algoritma + kalibrasi per pasien). **Bukan alat diagnosis**; layar menandainya dengan tanda bintang (*).
-   - **DHT11** di balik kisi ventilasi membaca suhu dan kelembapan ruang (kondisi simpan obat).
-   - **Buzzer** dengan lubang suara di kiri, sebagai alarm jadwal minum obat.
-9. **Isi ulang daya:** baterai LiPo 2000 mAh ada di kantong kiri-bawah. Modul IP5306 menempel di dinding kiri, sehingga **port USB-C untuk mengecas** keluar lewat dinding kiri. Di atasnya ada saklar daya.
+## Cara kerja
 
-![Muka depan](render/00_muka_depan_kamera_sensor.png)
+1. Blister obat tetap utuh. PMO menjepitnya di **wadah** (`19` belakang + `20` depan, dikunci pasak).
+2. Wadah dimasukkan **dari celah di atas** (celah tutup atas 119,75 × 10,5 mm). Wadah menyembul di atas seperti roti di pemanggang.
+3. **Servo 1** memutar G1 (44T) → G2 (36T) dengan pinion 12T yang menggigit **rack di sisi kiri wadah belakang**. Wadah turun satu baris per langkah (24,8 mm = 21,53° di servo).
+4. **Servo 2** menggerakkan kereta pelatuk ke kolom 1–4 (jarak kolom 25,0 mm). *(belum final)*
+5. **Servo 3** menekan pelatuk ke kubah sampai kaplet tembus foil ke belakang. **Landasan** (`15`) menahan dorongan dan punya 4 celah miring "/" untuk kaplet jatuh. *(pelatuk belum final)*
+6. Kaplet meluncur lewat corong ke baki ambil. *(corong belum final)*
 
-Pelatuk bisa menjangkau ke-28 kantong. Jumlah kaplet per hari (2–5) diatur di firmware: kereta mematuk kolom demi kolom, dan setelah satu baris habis, wadah diturunkan satu baris.
+### Ukuran blister dan wadah (terukur)
 
-| Blister masuk wadah | Pelatuk mematuk | Kaplet keluar ke belakang | Obat di baki |
-|---|---|---|---|
-| ![](render/02_blister_masuk_wadah.png) | ![](render/04_pelatuk_mematuk.png) | ![](render/05_kaplet_keluar_ke_belakang.png) | ![](render/06_obat_di_baki.png) |
+- Blister 103,5 × 179 mm, 4 kolom × 7 baris = 28 kaplet, kubah miring "/".
+- Jarak pusat kubah **25,0 mm (kiri-kanan) × 24,8 mm (atas-bawah)**.
+- Wadah 117 × 176 mm. Kelonggaran kiri-kanan 0,25 mm per sisi, depan-belakang 0,5 mm per sisi.
+- Tutup atas menyisakan tinggi kubah maksimal ±7,7 mm dari papan blister (tinggi kubah asli belum diukur).
 
-## Part cetak (`stl/`, sudah dalam posisi cetak; panduan lengkap di [PANDUAN_CETAK.md](PANDUAN_CETAK.md))
+## Isi di dinding depan
 
-| # | Part | Catatan |
-|---|---|---|
-| 01 | dinding depan/belakang/atas/bawah/kiri/kanan | Tebal 3 mm, lubang sekrup ber-countersink. Dinding depan sudah termasuk dudukan layar, kantong LiPo, kantong IP5306, kantong ESP32-CAM, cincin buzzer, lubang kabel & baut kantong jari PPG, dan ventilasi DHT11. Dinding kiri punya lubang port USB-C dan saklar. Untuk **Bambu Lab A1 mini** (bed 180 mm), dinding depan, belakang, kiri, dan kanan dicetak **dua belahan** (`_A_bawah` + `_B_atas`, sambungan ekor burung + lem). Wadah belakang juga dibelah. |
-| 02 | blok_sudut BL/BR/TL/TR | Pengikat dinding (sekrup M3) |
-| 03 | rel_kereta | Rel kereta pelatuk |
-| 04–06 | kereta, pelatuk, engkol_servo3 | Kereta + bantalan pelatuk 16,5×7 mm miring 45° |
-| 07 | tuas_servo2 | Tuas 133 mm, pin masuk garpu di bawah kereta |
-| 08–09 | braket_servo2, braket_servo1 | |
-| 10–12 | gear G1 40T, gear G2 36T/12T, spacer G2 | Modul 1. **PETG** lebih awet. G2 berputar pada baut M3 dari dinding belakang. |
-| 13–14 | pemandu_kiri, pemandu_kanan | Jalur naik-turun wadah |
-| 15 | landasan | Penahan dorongan pelatuk di belakang wadah |
-| 16 | corong_baki | Lantai miring, papan luncur, dan baki ambil |
-| 17–18 | klem_layar atas/bawah | Menjepit CYD ke jendela |
-| 19–20 | wadah_belakang, wadah_depan | **Wadah obat PMO.** Cetak 2 set supaya bisa bergantian. |
-| 21 | kantong_jari_ppg | Terowongan jari Ø19 × 35 mm + kantong papan MAX30102. Cetak **PLA hitam** supaya kedap cahaya. Dibaut 4× M3 + mur ke dinding depan. |
+- **Layar ESP32-2432S028 (CYD 2,8")**: jendela 69 × 50 mm, papan 1,5 mm, papan + kaca 5,5 mm. Kaca rata dengan dinding luar, sentuh bisa dipakai. Dijepit 4 klem sudut (`17`, M3 × 6).
+- **DHT22** (sensor saja, tanpa papan): kantong 25 × 15 × 7,7 mm.
+- **LiPo 2 × 803040** ditumpuk, paralel (±2000 mAh): kantong 44 × 31 mm. Celah kabel hanya di satu ujung (8 mm).
+- **Lubang keluar obat** di bawah DHT22 dan **kantong jari PPG** (`21`) di bawah layar.
+- **ESP32-CAM** di dinding depan atas (`01-F`).
 
-Total sekitar **595 g filamen** (1 rol 1 kg cukup). **Cara mencetak: lihat [PANDUAN_CETAK.md](PANDUAN_CETAK.md). Cara merakit: lihat [PANDUAN_RAKIT.md](PANDUAN_RAKIT.md).** `python build.py` mencetak berat per part dan mengecek tabrakan di semua posisi gerak (hasil terakhir: aman).
+## Isi di dinding samping
+
+- **Dinding kanan**: lubang **USB-C tegak** (4,6 × 10 mm) di `01-G`, **saklar geser** di `01-H` (lubang 7,5 × 3,9 mm, bingkai 12,9 × 6,9 mm). Saklar hanya memutus daya (hidup/mati).
+- **Dinding kiri**: polos, tanpa lubang (`01-I`, `01-J`). Lubang USB-C dan saklar lama sudah ditutup.
+
+## Part cetak (folder `stl_urut/`, 33 file)
+
+Daftar lengkap dan arah pasang blok sudut ada di `stl_urut/DAFTAR_FILE.md`. Cara mencetak ada di [PANDUAN_CETAK.md](PANDUAN_CETAK.md), cara merakit di [PANDUAN_RAKIT.md](PANDUAN_RAKIT.md).
+
+| Kelompok | File |
+|---|---|
+| Dinding (10) | 01-A atas, 01-B bawah, 01-C/D belakang bawah/atas, 01-E/F depan bawah/atas, 01-G/H kanan bawah/atas, 01-I/J kiri bawah/atas |
+| Blok sudut (4) | 02-A bawah kiri, 02-B bawah kanan, 02-C atas kanan, 02-D atas kiri |
+| Mekanisme wadah v5 | 09 braket servo 1, 10 G1 44T, 11 G2 36T/12T, 12 spacer G2, 13 pemandu kiri, 14 pemandu kanan, 15 landasan |
+| Wadah | 19 wadah belakang (rack), 20 wadah depan (28 jendela), 26-A/26-B pasak wadah |
+| Layar dan sensor | 17 klem layar (4 pcs), 21 kantong jari PPG |
+| **Belum didesain ulang** | 03 rel, 05 pelatuk, 06 engkol servo 3, 07 tuas servo 2, 08 braket servo 2, 16 corong baki (04 kereta belum ada) |
+
+Dinding bawah+atas dari satu sisi dicetak terpisah (supaya muat bed 180 mm) lalu disambung. Antar dinding memakai **sambungan puzzle/tab** (36 tab, kelonggaran 0,10–0,15 mm), jadi dinding samping tidak sekadar dibaut ke blok sudut.
 
 ## Elektronik
 
-| Komponen | Letak | Sambungan |
+| Komponen | Letak | Catatan |
 |---|---|---|
-| **ESP32-2432S028 (CYD 2,8")**: otak utama + layar LVGL | muka depan tengah | I2C: SDA = GPIO 27, SCL = GPIO 22 (konektor CN1) |
-| **PCA9685** (driver 16 servo, I2C 0x40) | di balik layar | I2C CYD → 3× MG90S |
-| **3× MG90S** (wadah, tuas kereta, pelatuk) | mekanisme | PCA9685 kanal 0, 1, 2 |
-| **MAX30102** (sensor PPG: detak jantung, SpO₂; estimasi TD & gula darah) | lantai kantong jari PPG di bawah layar | I2C CYD (bersama PCA9685); kabel lewat lubang di dinding depan |
-| **ESP32-CAM** (OV2640) | kiri-atas, lensa di lubang Ø9 | Komunikasi ke CYD **tanpa kabel lewat ESP-NOW**; hanya perlu 5 V + GND |
-| **DHT11** (suhu & kelembapan) | balik kisi ventilasi | Data ke **GPIO 13 ESP32-CAM** (+ resistor pull-up 10 kΩ bila modulnya tanpa resistor) |
-| **Buzzer aktif 5 V** (Ø12 mm) | kiri, lubang suara | **GPIO 14 ESP32-CAM** lewat transistor NPN (2N2222/S8050) + resistor 1 kΩ |
-| **LiPo 1S 103450** (3,7 V, 2000 mAh) | kantong kiri-bawah | ke IP5306 |
-| **IP5306** (charger + boost 5 V 2,1 A, USB-C) | pojok kiri, menempel dinding kiri | **Port USB-C keluar lewat dinding kiri** untuk mengecas; output 5 V ke semua modul |
-| Saklar toggle mini Ø6 | dinding kiri | memutus output 5 V |
-| Kapasitor 1000 µF / 10 V | dekat PCA9685 | meredam lonjakan arus servo |
+| ESP32-2432S028 (CYD) | dinding depan, jendela layar | otak utama + layar LVGL |
+| ESP32-C3 | **belum ada dudukan** | pengendali utama menurut rencana proyek; posisi perlu ditentukan |
+| ESP32-CAM | dinding depan atas | verifikasi wajah, komunikasi ESP-NOW |
+| DHT22 | kantong DHT22 di dinding depan | butuh pull-up 10 kΩ pada pin data (sensor tanpa papan) |
+| LiPo 2 × 803040 paralel | kantong baterai di dinding depan | ±2000 mAh. Samakan tegangan kedua sel sebelum diparalel |
+| Modul pengisi daya (IP5306) | di balik dinding kanan | USB-C tegak keluar lewat `01-G`. Posisi konektor terhadap lubang **belum dicek dengan modul asli** |
+| Saklar geser 3 kaki (12,5 × 6,5 × 6 mm) | dinding kanan atas | daya hidup/mati |
+| MG90S × 3, PCA9685, MAX30102, buzzer, kapasitor 1000 µF | lihat PANDUAN_RAKIT | sama seperti rencana sebelumnya |
 
-Alasan pembagian ini: CYD hanya punya 2 GPIO bebas yang aman (22 dan 27), jadi keduanya dipakai sebagai bus I2C untuk servo dan MAX30102. DHT11 dan buzzer dipindah ke pin bebas ESP32-CAM (GPIO 13 dan 14, slot microSD tidak dipakai). Kedua ESP32 saling bicara lewat ESP-NOW, jadi tidak perlu kabel data.
+Catatan: pembagian pin (CYD I2C GPIO 27/22, DHT dan buzzer di pin ESP32-CAM, komunikasi ESP-NOW) di PANDUAN_RAKIT masih mengikuti rancangan awal dan perlu disesuaikan bila ESP32-C3 dipakai sebagai pengendali.
 
-**Alur verifikasi:** saat jadwal tiba, buzzer berbunyi dan layar meminta pasien menghadap kamera. ESP32-CAM mencocokkan wajah dengan wajah yang sudah didaftarkan (pustaka esp-who, cocok untuk beberapa wajah). Kalau cocok, ESP32-CAM mengirim "OK" ke CYD lewat ESP-NOW. Pasien lalu memasukkan jari ke kantong jari PPG (±15 detik pengukuran), obat dikeluarkan, dan foto bukti bisa dikirim ke aplikasi web ARTA-C (Firebase) untuk dipantau PMO.
-
-**Daya:** semua modul mengambil 5 V dari IP5306. Servo bergerak bergantian, jadi puncak arusnya sekitar 1,2–1,5 A, masih di bawah batas 2,1 A. Baterai 2000 mAh cukup untuk ±1–2 hari pemakaian normal (layar redup saat idle, kamera hanya menyala saat verifikasi). Cas lewat USB-C 5 V.
-
-**Pemrograman:** CYD dan ESP32-CAM ada di dalam kotak, jadi setelah pemasangan pertama, update firmware lewat **OTA (WiFi)**. ESP32-CAM perlu adaptor USB-TTL (FTDI) untuk upload pertama kali, sebelum dipasang.
-
-## Gerakan (untuk firmware)
+## Gerakan servo (untuk firmware)
 
 | Servo | Posisi |
 |---|---|
-| Servo 1 (wadah) | 0° = masuk/keluar wadah; baris 1 ≈ 27,6°, lalu **+20,9° per baris**; baris 7 ≈ 152,8° |
-| Servo 2 (tuas) | tengah = 90°; kolom 1 = −14,6°, kolom 2 = −4,8°, kolom 3 = +4,8°, kolom 4 = +14,6° (relatif dari tengah) |
-| Servo 3 (pelatuk) | 0° = naik, 180° = tembus. Gerakkan pelan (±1°/15 ms), tahan 0,5 detik, lalu kembali ke 0°. |
+| Servo 1 (wadah) | 0° = masuk/keluar wadah. Baris 1 ≈ 21,0° (kalibrasi ±3°), lalu **+21,53° per baris**: 21,0 · 42,5 · 64,1 · 85,6 · 107,1 · 128,7 · 150,2°. **Batas maksimum 158°** (di atas ±160° ujung bawah wadah menabrak blok sudut kanan bawah). |
+| Servo 2 (kereta) | Jarak kolom 25,0 mm. Dengan tuas 133 mm: kolom 1…4 ≈ −16,4° / −5,4° / +5,4° / +16,4° dari tengah. *Perkiraan; desain servo 2 belum final.* |
+| Servo 3 (pelatuk) | 0° = naik, 180° = tembus. Gerak pelan, tahan 0,5 detik, kembali. *Desain engkol lama, belum final.* |
 
-Urutan satu dosis:
+Simpan baris dan kolom terakhir di NVS agar tidak hilang saat mati daya.
 
-```
-untuk tiap kaplet:
-  kalau kolom > 4: servo3 = 0, servo1 turun 1 baris, kolom = 1
-  servo2 ke kolom
-  servo3 patuk pelan
-  kolom += 1
-```
+## Yang masih terbuka
 
-Simpan posisi baris dan kolom di NVS supaya tidak hilang saat mati daya. Sediakan layar kalibrasi LVGL untuk menyetel sudut tiap servo.
-
-## WAJIB diukur ulang
-
-Parameter ada di bagian atas `build.py`:
-
-- Blister (ukuran terukur, Nov 2026): `BL_W, BL_H` = 104 × 180 mm, 4 kolom × 7 baris; kaplet `CAP_L × CAP_W × CAP_T` = 20,5 × 10,5 × 6,5 mm,
-  **miring `TILT` = 45°** (semua sejajar); celah tepi-ke-tepi `GAP_X` 7,5 mm (horizontal) dan `GAP_Z` 7 mm (vertikal)
-  → jarak pusat `PX, PZ` = 22,35 × 21,85 mm (dihitung otomatis). Tinggi alat +20 mm (`DZ`) agar baris ke-7 tetap muat.
-- Kaplet: `CAP_L, CAP_W, CAP_T`
-- Ukuran MG90S (`SB_*`) dan posisi area aktif LCD (`ACT_FROM_USB`)
-- Posisi port USB-C modul IP5306 di dinding kiri (`USBC`), posisi lensa ESP32-CAM (`CAM`, `CAM_LENS`): cocokkan dengan modul yang dibeli
-
-Setelah parameter diubah, jalankan `python build.py` (STL + cek tabrakan), lalu `python anim.py` untuk animasi dan render.
-Animasi dan render butuh Blender 5.x dan ffmpeg.
+- Desain ulang kereta pelatuk (04), servo 2 (lubang braket 08 di dinding belakang berjarak 22 mm, braketnya 30,8 mm), corong baki dan lubangnya di dinding belakang.
+- Apakah tinggi kotak 226 mm cukup untuk jarak turun wadah ±325 mm (wadah menyembul di atas tutup).
+- Dudukan ESP32-C3 dan ESP32-CAM (ukuran modul belum dikonfirmasi).
+- Posisi USB-C terhadap modul IP5306 asli, dan tinggi kubah blister.
+- Pembaruan animasi dan gambar teknik.
 
 ## Catatan
 
-- Gaya tekan untuk merobek foil blister bisa sekitar 20–30 N. MG90S dengan engkol 6,3 mm cukup karena gayanya makin besar menjelang akhir langkah, tapi tetap uji dengan blister asli.
-- Kalau masih gagal, ganti servo 3 dengan MG946R pada braket yang lebih besar, atau perkecil engkol.
-- Model v1 (kaset 7 hari) disimpan di `arsip_v1_kaset/`.
+- Gaya untuk menembus foil blister sekitar 20–30 N. Uji dengan blister asli. Bila MG90S kurang kuat, pertimbangkan MG946R pada braket yang lebih besar.
+- Hasil PPG (nadi, SpO₂) hanya untuk pemantauan, bukan diagnosis. Tekanan darah dan gula darah dari PPG hanya estimasi eksperimental.
